@@ -5,5 +5,5 @@ class Model:
     def fit(data):
         pass
     
-    def predicct(X):
+    def predict(X):
         pass
