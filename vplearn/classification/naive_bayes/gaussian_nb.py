@@ -6,7 +6,7 @@ from scipy.stats import norm
 
 class GaussianNB(Model):
     def __init__(self):
-        pass
+        super().__init__()
     
     def get_X_of_the_class(self, X: pd.DataFrame, y: pd.Series, _class: int) -> pd.DataFrame:
         df = pd.concat([X, y], axis=1)
