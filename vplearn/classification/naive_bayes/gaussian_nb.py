@@ -2,7 +2,6 @@ from vplearn._model import Model
 
 import pandas as pd
 import numpy as np
-import seaborn as sns
 from scipy.stats import norm
 
 class GaussianNB(Model):
