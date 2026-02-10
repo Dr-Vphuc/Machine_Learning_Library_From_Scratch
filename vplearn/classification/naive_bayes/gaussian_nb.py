@@ -8,13 +8,13 @@ class GaussianNB(Model):
     def __init__(self):
         super().__init__()
     
-    def get_X_of_the_class(self, X: pd.DataFrame, y: pd.Series, _class: int) -> pd.DataFrame:
+    def _get_X_of_the_class(self, X: pd.DataFrame, y: pd.Series, _class: int) -> pd.DataFrame:
         df = pd.concat([X, y], axis=1)
         df = df[df.iloc[:, -1] == _class]
         
         return df.iloc[:, :-1]
     
-    def compute_data_features(self, X: pd.DataFrame, y: pd.Series) \
+    def _compute_data_features(self, X: pd.DataFrame, y: pd.Series) \
     -> tuple[np.ndarray,np.ndarray,np.ndarray]:
         
         data_size = y.shape[0]
@@ -25,7 +25,7 @@ class GaussianNB(Model):
         pi_list = []
         
         for _class in range(n_class):
-            X_c = self.get_X_of_the_class(X, y, _class)
+            X_c = self._get_X_of_the_class(X, y, _class)
             
             mu_list_of_c = np.mean(X_c, axis=0)
             mu_list.append(mu_list_of_c)
@@ -39,9 +39,9 @@ class GaussianNB(Model):
         return np.array(mu_list), np.array(std_list), np.array(pi_list)
             
     def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
-        self.mu_list, self.std_list, self.pi_list = self.compute_data_features(X, y)
+        self.mu_list, self.std_list, self.pi_list = self._compute_data_features(X, y)
     
-    def predict_gaussian_nb_class(self, X: np.ndarray) -> np.ndarray:
+    def _predict_gaussian_nb_class(self, X: np.ndarray) -> np.ndarray:
         n_classes = self.mu_list.shape[0]
         n_features = X.shape[1]
         predict = []
@@ -67,4 +67,4 @@ class GaussianNB(Model):
         except:
             raise TypeError("Can not convert pd.DataFrame to np.ndarray")
         
-        return self.predict_gaussian_nb_class(X)
+        return self._predict_gaussian_nb_class(X)
