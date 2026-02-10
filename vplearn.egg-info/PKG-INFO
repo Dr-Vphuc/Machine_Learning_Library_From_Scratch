@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: vplearn
+Version: 0.1.0
+Summary: A custom machine learning library
+Requires-Python: >=3.8
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: pandas
+Provides-Extra: dev
+Requires-Dist: seaborn; extra == "dev"
+Dynamic: license-file
