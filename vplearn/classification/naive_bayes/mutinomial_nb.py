@@ -1,0 +1,89 @@
+from vplearn._model import Model
+
+import numpy as np
+import pandas as pd
+
+class MutinomialNB(Model):
+    def __init__(seft):
+        super().__init__()
+        
+    def fit(self, X: pd.DataFrame, y:pd.Series) -> None:
+        if not isinstance(X, pd.DataFrame):
+            raise TypeError("X must be np.ndarray or pd.DataFrame")
+        if not isinstance(y, pd.Series):
+            raise TypeError("y must be np.ndarray or pd.DataFrame/Series")
+        
+        self._compute_lambda(X, y)
+        
+    def _compute_mnb_features(self, X:pd.DataFrame, y:pd.Series) -> None:
+        class_counted = {}
+        N_b = {}
+        
+        for x_row in X.itertuples():
+             
+            if y[x_row.Index] in class_counted:
+                class_counted[y[x_row.Index]] += 1
+            else:
+                class_counted[y[x_row.Index]] = 1
+            if y[x_row.Index] in N_b:
+                N_b[y[x_row.Index]] += np.sum(np.array(x_row[1:]))
+            else:
+                N_b[y[x_row.Index]] = np.sum(np.array(x_row[1:]))
+            
+        
+        _ = [(_class, class_counted[_class] / y.shape[0]) for _class in class_counted]
+        self.p_c = dict(_)
+        
+        self.N_b = N_b
+            
+        print(self.N_b)
+        
+    def _compute_lambda(self, X:pd.DataFrame, y:pd.Series) -> np.ndarray:
+        lambda_list = []
+        self.classes = list(y.unique().tolist())
+        n_features = X.shape[1]
+        
+        self._compute_mnb_features(X, y)
+        
+        for _class in self.classes:
+            denominator = n_features + self.N_b[_class]
+            
+            X_c = pd.DataFrame(X[y == _class])
+            X_c_np = X_c.to_numpy()
+            
+            numerators = np.sum(X_c_np, axis=0) + 1
+            
+            lambda_c = numerators / denominator
+            print(numerators, denominator)
+            lambda_list.append(lambda_c)
+            
+        lambda_list = np.array(lambda_list)
+        self.lambda_list = lambda_list
+        # print(lambda_list)
+        return lambda_list
+        
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        if not isinstance(X, np.ndarray) and not isinstance(X, pd.DataFrame):
+            raise TypeError("X must be np.ndarray or pd.DataFrame")
+        try:
+            X = X.to_numpy()
+        except:
+            raise TypeError("Can not convert pd.DataFrame to np.ndarray")
+        
+        return self._predict_mnb_class(X)
+        
+    def _predict_mnb_class(self, X:pd.DataFrame) -> np.ndarray:
+        pred = []
+        
+        for x_row in X:
+            scores = []
+            for class_idx, _class in enumerate(self.classes):
+                score = self.p_c[_class]
+                for feature_idx, x_i in enumerate(x_row):
+                    score *= self.lambda_list[class_idx,feature_idx] ** x_i
+                scores.append(score)
+            max_score_class_idx = np.argmax(scores)
+            max_score_class = self.classes[max_score_class_idx]
+            pred.append(max_score_class)
+
+        return np.array(pred)
