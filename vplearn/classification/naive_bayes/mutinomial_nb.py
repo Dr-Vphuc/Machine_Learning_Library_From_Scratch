@@ -10,7 +10,7 @@ class MutinomialNB(Model):
     def fit(self, X: pd.DataFrame, y:pd.Series) -> None:
         if not isinstance(X, pd.DataFrame):
             raise TypeError("X must be np.ndarray or pd.DataFrame")
-        if not isinstance(y, pd.Series):
+        if not isinstance(y, pd.Series) or not isinstance(y, pd.DataFrame):
             raise TypeError("y must be np.ndarray or pd.DataFrame/Series")
         
         self._compute_lambda(X, y)
