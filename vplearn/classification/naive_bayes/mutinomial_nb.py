@@ -20,6 +20,7 @@ class MutinomialNB(Model):
             raise TypeError("X must be np.ndarray or pd.DataFrame")
         try:
             X = X.to_numpy()
+            X = X.reshape(1,-1)
         except:
             raise TypeError("Can not convert pd.DataFrame to np.ndarray")
         
