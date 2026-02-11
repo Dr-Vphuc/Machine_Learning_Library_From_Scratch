@@ -26,25 +26,11 @@ class MutinomialNB(Model):
         return self._predict_mnb_class(X)
         
     def _compute_mnb_features(self, X:pd.DataFrame, y:pd.Series) -> None:
-        class_counted = {}
-        N_b = {}
+        self.p_c = y.value_counts(normalize=True).to_dict()
         
-        for x_row in X.itertuples():
-             
-            if y[x_row.Index] in class_counted:
-                class_counted[y[x_row.Index]] += 1
-            else:
-                class_counted[y[x_row.Index]] = 1
-            if y[x_row.Index] in N_b:
-                N_b[y[x_row.Index]] += np.sum(np.array(x_row[1:]))
-            else:
-                N_b[y[x_row.Index]] = np.sum(np.array(x_row[1:]))
-            
-        
-        _ = [(_class, class_counted[_class] / y.shape[0]) for _class in class_counted]
-        self.p_c = dict(_)
-        
-        self.N_b = N_b
+        df = X.copy()
+        df['class'] = y
+        self.N_b = df.groupby('class').sum().sum(axis=1).to_dict()
         
     def _compute_lambda(self, X:pd.DataFrame, y:pd.Series) -> np.ndarray:
         lambda_list = []
