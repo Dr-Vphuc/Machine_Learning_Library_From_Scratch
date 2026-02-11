@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 
 class MutinomialNB(Model):
-    def __init__(seft):
+    def __init__(self):
+        self.laplace_smoothing_alpha = 1
         super().__init__()
         
     def fit(self, X: pd.DataFrame, y:pd.Series) -> None:
@@ -46,7 +47,7 @@ class MutinomialNB(Model):
             X_c = pd.DataFrame(X[y == _class])
             X_c_np = X_c.to_numpy()
             
-            numerators = np.sum(X_c_np, axis=0) + 1
+            numerators = np.sum(X_c_np, axis=0) + self.laplace_smoothing_alpha
             
             lambda_c = numerators / denominator
             lambda_list.append(lambda_c)
