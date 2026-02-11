@@ -15,6 +15,16 @@ class MutinomialNB(Model):
         
         self._compute_lambda(X, y)
         
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        if not isinstance(X, np.ndarray) and not isinstance(X, pd.DataFrame):
+            raise TypeError("X must be np.ndarray or pd.DataFrame")
+        try:
+            X = X.to_numpy()
+        except:
+            raise TypeError("Can not convert pd.DataFrame to np.ndarray")
+        
+        return self._predict_mnb_class(X)
+        
     def _compute_mnb_features(self, X:pd.DataFrame, y:pd.Series) -> None:
         class_counted = {}
         N_b = {}
@@ -35,8 +45,6 @@ class MutinomialNB(Model):
         self.p_c = dict(_)
         
         self.N_b = N_b
-            
-        print(self.N_b)
         
     def _compute_lambda(self, X:pd.DataFrame, y:pd.Series) -> np.ndarray:
         lambda_list = []
@@ -54,23 +62,12 @@ class MutinomialNB(Model):
             numerators = np.sum(X_c_np, axis=0) + 1
             
             lambda_c = numerators / denominator
-            print(numerators, denominator)
             lambda_list.append(lambda_c)
             
         lambda_list = np.array(lambda_list)
         self.lambda_list = lambda_list
-        # print(lambda_list)
+        
         return lambda_list
-        
-    def predict(self, X: pd.DataFrame) -> np.ndarray:
-        if not isinstance(X, np.ndarray) and not isinstance(X, pd.DataFrame):
-            raise TypeError("X must be np.ndarray or pd.DataFrame")
-        try:
-            X = X.to_numpy()
-        except:
-            raise TypeError("Can not convert pd.DataFrame to np.ndarray")
-        
-        return self._predict_mnb_class(X)
         
     def _predict_mnb_class(self, X:pd.DataFrame) -> np.ndarray:
         pred = []

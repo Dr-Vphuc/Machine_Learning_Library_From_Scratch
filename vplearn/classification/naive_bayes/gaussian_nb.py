@@ -8,6 +8,19 @@ class GaussianNB(Model):
     def __init__(self):
         super().__init__()
     
+    def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
+        self.mu_list, self.std_list, self.pi_list = self._compute_data_features(X, y)
+        
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        if not isinstance(X, np.ndarray) and not isinstance(X, pd.DataFrame):
+            raise TypeError("X must be np.ndarray or pd.DataFrame")
+        try:
+            X = X.to_numpy()
+        except:
+            raise TypeError("Can not convert pd.DataFrame to np.ndarray")
+        
+        return self._predict_gaussian_nb_class(X)
+    
     def _get_X_of_the_class(self, X: pd.DataFrame, y: pd.Series, _class: int) -> pd.DataFrame:
         df = pd.concat([X, y], axis=1)
         df = df[df.iloc[:, -1] == _class]
@@ -37,9 +50,6 @@ class GaussianNB(Model):
             pi_list.append(pi_c)
         
         return np.array(mu_list), np.array(std_list), np.array(pi_list)
-            
-    def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
-        self.mu_list, self.std_list, self.pi_list = self._compute_data_features(X, y)
     
     def _predict_gaussian_nb_class(self, X: np.ndarray) -> np.ndarray:
         n_classes = self.mu_list.shape[0]
@@ -57,14 +67,4 @@ class GaussianNB(Model):
             predict.append(np.argmax(scores_list))
             
         return np.array(predict)
-            
-
-    def predict(self, X: pd.DataFrame) -> np.ndarray:
-        if not isinstance(X, np.ndarray) and not isinstance(X, pd.DataFrame):
-            raise TypeError("X must be np.ndarray or pd.DataFrame")
-        try:
-            X = X.to_numpy()
-        except:
-            raise TypeError("Can not convert pd.DataFrame to np.ndarray")
-        
-        return self._predict_gaussian_nb_class(X)
+    
