@@ -1,6 +1,4 @@
-testing/*.data
-testing/*.csv
-testing/*.log
+testing/data/*
 __pycache__/*
 *.pyc
 .DS_Store
