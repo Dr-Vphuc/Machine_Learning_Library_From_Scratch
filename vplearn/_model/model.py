@@ -33,3 +33,17 @@ class Model:
             raise TypeError("X must be np.ndarray or pd.DataFrame/Series")
         
         return True
+    
+    def _correct_predict_input_format(
+        self,
+        X: Union[pd.DataFrame, pd.Series, np.ndarray]
+    ) -> np.ndarray:
+        if not isinstance(X, np.ndarray):
+            try:
+                X = X.to_numpy()
+                if X.ndim == 1:
+                    X = X.reshape(1, -1)
+            except:
+                raise TypeError("Cannot convert X to numpy array")
+        
+        return X
