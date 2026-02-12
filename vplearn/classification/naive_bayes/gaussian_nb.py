@@ -19,13 +19,7 @@ class GaussianNB(InstanceBaseModel):
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         self._check_predict_input_format(X)
         
-        if not isinstance(X, np.ndarray):
-            try:
-                X = X.to_numpy()
-                if X.ndim == 1:
-                    X = X.reshape(1, -1)
-            except:
-                raise TypeError("Cannot convert X to numpy array")
+        self._correct_predict_input_format(X)
         
         return self._predict_gaussian_nb_class(X)
     
