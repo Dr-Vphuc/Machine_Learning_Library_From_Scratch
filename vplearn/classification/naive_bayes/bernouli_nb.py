@@ -1,18 +1,15 @@
-from vplearn._model import Model
+from vplearn._model import InstanceBaseModel
 
 import pandas as pd
 import numpy as np
 
-class BernouliNB(Model):
+class BernouliNB(InstanceBaseModel):
     def __init__(self):
         self.laplace_smoothing_alpha = 1
         super().__init__()
     
     def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
-        if not isinstance(X, pd.DataFrame):
-            raise TypeError("X must be np.ndarray or pd.DataFrame")
-        if not isinstance(y, pd.Series) and not isinstance(y, pd.DataFrame):
-            raise TypeError("y must be np.ndarray or pd.DataFrame/Series")
+        self._check_fit_input_format(X, y)    
         
         self._compute_lambda(X, y)
     
@@ -54,8 +51,6 @@ class BernouliNB(Model):
         lambda_list = np.array(lambda_list)
         self.lambda_list = lambda_list
         
-        print(f"lambda list : {lambda_list}")
-        
     def _predict_bnb_class(self, X: np.ndarray) -> np.ndarray:
         pred = []
         
@@ -64,13 +59,9 @@ class BernouliNB(Model):
             for class_idx, _class in enumerate(self.classes):
                 score = self.p_c[_class]
                 for feature_idx, x_i in enumerate(x_row):
-                    _ = (self.lambda_list[class_idx, feature_idx] * x_i) \
+                    score *= (self.lambda_list[class_idx, feature_idx] * x_i) \
                     + ((1 - self.lambda_list[class_idx, feature_idx]) * (1 - x_i))
-                    print(f"({self.lambda_list[class_idx, feature_idx] * x_i} + {(1 - self.lambda_list[class_idx, feature_idx]) * (1 - x_i)})", end=',')
-                    print(_)
-                    score *= _
                 scores.append(score)
-                print(score)
             max_score_class_idx = np.argmax(scores)
             max_score_class = self.classes[max_score_class_idx]
             pred.append(max_score_class)
