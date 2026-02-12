@@ -22,7 +22,7 @@ X_test = test.iloc[:,:-1]
 y_test = test.iloc[:,-1]
 y_test = ec.label_encoding(y_test)
 
-print(y_train)
+# print(y_train)
 
 gnb = GaussianNB()
 gnb.fit(X_train, y_train)
