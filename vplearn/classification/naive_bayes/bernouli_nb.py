@@ -19,7 +19,7 @@ class BernouliNB(InstanceBaseModel):
     def predict(self, X: np.ndarray) -> np.ndarray:
         self._check_predict_input_format(X)
         
-        self._correct_predict_input_format(X)
+        X = self._correct_predict_input_format(X)
         
         return self._predict_bnb_class(X)
     

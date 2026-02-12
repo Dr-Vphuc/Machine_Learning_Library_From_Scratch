@@ -19,7 +19,7 @@ class GaussianNB(InstanceBaseModel):
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         self._check_predict_input_format(X)
         
-        self._correct_predict_input_format(X)
+        X = self._correct_predict_input_format(X)
         
         return self._predict_gaussian_nb_class(X)
     
