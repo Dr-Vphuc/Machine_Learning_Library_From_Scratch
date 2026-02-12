@@ -1,28 +1,31 @@
-from vplearn._model import Model
+from vplearn._model import InstanceBaseModel
 
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
 
-class GaussianNB(Model):
+class GaussianNB(InstanceBaseModel):
     def __init__(self):
         super().__init__()
     
     def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
-        if not isinstance(X, pd.DataFrame):
-            raise TypeError("X must be np.ndarray or pd.DataFrame")
-        if not isinstance(y, pd.Series) and not isinstance(y, pd.DataFrame):
-            raise TypeError("y must be np.ndarray or pd.DataFrame/Series")
+        self._check_fit_input_format(X, y)    
+        
+        X = self._convert_to_dataframe(X)
+        y = self._convert_to_dataframe(y)
+        
         self.mu_list, self.std_list, self.pi_list = self._compute_data_features(X, y)
         
     def predict(self, X: pd.DataFrame) -> np.ndarray:
-        if not isinstance(X, np.ndarray) and not isinstance(X, pd.DataFrame):
-            raise TypeError("X must be np.ndarray or pd.DataFrame")
-        try:
-            X = X.to_numpy()
-            X = X.reshape(1,-1)
-        except:
-            raise TypeError("Can not convert pd.DataFrame to np.ndarray")
+        self._check_predict_input_format(X)
+        
+        if not isinstance(X, np.ndarray):
+            try:
+                X = X.to_numpy()
+                if X.ndim == 1:
+                    X = X.reshape(1, -1)
+            except:
+                raise TypeError("Cannot convert X to numpy array")
         
         return self._predict_gaussian_nb_class(X)
     
