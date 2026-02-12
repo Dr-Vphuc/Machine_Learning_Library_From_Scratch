@@ -40,10 +40,13 @@ class Model:
     ) -> np.ndarray:
         if not isinstance(X, np.ndarray):
             try:
-                X = X.to_numpy()
-                if X.ndim == 1:
-                    X = X.reshape(1, -1)
+                X_np = X.to_numpy()
+                if X_np.ndim == 1:
+                    if X.name:
+                        X_np = X_np.reshape(-1, 1)
+                    elif X.columns:
+                        X_np = X_np.reshape(1, -1)
             except:
-                raise TypeError("Cannot convert X to numpy array")
+                raise 
         
-        return X
+        return X_np  
