@@ -1,4 +1,4 @@
-testing/data/*
+testing/*
 __pycache__/*
 *.pyc
 .DS_Store
