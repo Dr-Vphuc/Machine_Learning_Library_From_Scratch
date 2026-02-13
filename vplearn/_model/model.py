@@ -48,5 +48,7 @@ class Model:
                         X_np = X_np.reshape(1, -1)
             except:
                 raise 
-        
-        return X_np  
+        else:
+            X_np = X
+            
+        return X_np
