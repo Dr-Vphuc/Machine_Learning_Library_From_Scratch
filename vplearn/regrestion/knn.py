@@ -1,9 +1,9 @@
-from vplearn._model import ModelBaseModel
+from vplearn._model import InstanceBaseModel
 
 import pandas as pd
 import numpy as np
 
-class KNN(ModelBaseModel):
+class KNN(InstanceBaseModel):
     def __init__(self):
         super().__init__()
     
@@ -30,7 +30,6 @@ class KNN(ModelBaseModel):
         for x_row in X:
             k_closest_idxes = self._get_k_closest(x_row)
             k_closest_points_y = self.y_train[k_closest_idxes]
-            print((x_row, k_closest_idxes, k_closest_points_y))
             
             pred = np.mean(k_closest_points_y)
             preds.append(pred)
