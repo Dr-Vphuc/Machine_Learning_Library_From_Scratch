@@ -9,7 +9,7 @@ class LinearRegrestion(ModelBaseModel):
     def __init__(self):
         super().__init__()
     
-    def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
+    def fit(self, X: pd.DataFrame, y: pd.Series) -> np.ndarray:
         self._check_fit_input_format(X, y)
         
         self.X_train = self._convert_to_numpy(X)
