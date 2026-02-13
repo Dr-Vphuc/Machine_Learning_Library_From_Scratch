@@ -59,13 +59,4 @@ class LinearRegrestion(ModelBaseModel):
         return Q.transpose(), R
     
     def _predict_linear_regression(self, X: np.ndarray) -> np.ndarray:
-        preds = []
-        
-        for x_row in X:
-            pred = self.coefficents[0]
-            for idx, x_i in enumerate(x_row):
-                pred += x_i * self.coefficents[idx + 1]
-                
-            preds.append(pred)
-        
-        return np.array(preds)
+        return self.coefficents[0] + np.dot(X, self.coefficents[1:])
