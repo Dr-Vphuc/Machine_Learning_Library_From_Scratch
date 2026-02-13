@@ -22,3 +22,12 @@ class InstanceBaseModel(Model):
             if target.ndim == 1
             else pd.DataFrame(target)
         )
+    
+    def _convert_to_numpy(
+        self, 
+        target: Union[pd.DataFrame, pd.Series]
+    ) -> np.ndarray:
+        if isinstance(target, np.ndarray):
+            return target
+        # Self-note : Lưu lại các tên trường
+        return target.to_numpy()
