@@ -11,18 +11,21 @@ class LinearRegrestion(ModelBaseModel):
     
     def fit(self, X: pd.DataFrame, y: pd.Series) -> np.ndarray:
         self._check_fit_input_format(X, y)
+        
+        self.X_train = self._convert_to_numpy(X)
+        self.y_train = self._convert_to_numpy(y)
     
-        X_bars = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
+        X_bars = np.concatenate((np.ones((X.shape[0], 1)), self.X_train), axis=1)
 
         Q, R = self.qr_householder(X_bars)
         R_pinv = np.linalg.pinv(R)
         A = np.dot(R_pinv, Q.T)
         
         
-        _ = np.dot(A, y).T.tolist()
+        _ = np.dot(A, self.y_train).T.tolist()
         self.coefficents = _[0]
         
-        return np.dot(A, y)
+        return np.dot(A, self.y_train)
     
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         self._check_predict_input_format(X)
