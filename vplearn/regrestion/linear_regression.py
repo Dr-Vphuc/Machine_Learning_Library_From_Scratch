@@ -11,9 +11,6 @@ class LinearRegrestion(ModelBaseModel):
     
     def fit(self, X: pd.DataFrame, y: pd.Series) -> np.ndarray:
         self._check_fit_input_format(X, y)
-        
-        self.X_train = self._convert_to_numpy(X)
-        self.y_train = self._convert_to_numpy(y)
     
         X_bars = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
 
