@@ -28,7 +28,11 @@ class LinearRegrestion(ModelBaseModel):
         return np.dot(A, y)
     
     def predict(self, X: pd.DataFrame) -> np.ndarray:
-        pass
+        self._check_predict_input_format(X)
+        
+        X = self._correct_predict_input_format(X)
+        
+        return self._predict_linear_regression(X)
     
     def qr_householder(self, A: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         M = A.shape[0]
@@ -53,3 +57,15 @@ class LinearRegrestion(ModelBaseModel):
                 Q[n:, i] = Q[n:, i] - (2 / (v@v)) * ((np.outer(v, v)) @ Q[n:, i])
                 
         return Q.transpose(), R
+    
+    def _predict_linear_regression(self, X: np.ndarray) -> np.ndarray:
+        preds = []
+        
+        for x_row in X:
+            pred = self.coefficents[0]
+            for idx, x_i in enumerate(x_row):
+                pred += x_i * self.coefficents[idx + 1]
+                
+            preds.append(pred)
+        
+        return np.array(preds)
