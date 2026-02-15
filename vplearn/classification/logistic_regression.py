@@ -44,7 +44,7 @@ class LogisticRegression(ModelBaseModel):
                 self.coefficents = self._logistic_sigmoid_regression(X_train, y_train)
             elif self.n_classes > 2:
                 self._activate_func = 'softmax'
-                self.w = self._softmax_regression(X_train, y_train)
+                self.coefficents = self._softmax_regression(X_train, y_train)
         if self.activate == 'sigmoid':
             if self.n_classes > 2:
                 raise ValueError("Sigmoid activation is only used for binary classification.")
@@ -52,7 +52,7 @@ class LogisticRegression(ModelBaseModel):
             self.coefficents = self._logistic_sigmoid_regression(X_train, y_train)
         elif self.activate == 'softmax':
             self._activate_func = 'softmax'
-            self.w = self._softmax_regression(X_train, y_train)
+            self.coefficents = self._softmax_regression(X_train, y_train)
     
     def predict(self, X: pd.DataFrame):
         self._check_predict_input_format(X)
