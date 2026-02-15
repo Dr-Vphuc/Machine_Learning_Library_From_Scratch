@@ -16,11 +16,11 @@ class Model:
     def _check_fit_input_format(
         self, 
         X: Union[pd.DataFrame, pd.Series, np.ndarray], 
-        y: Union[pd.Series, np.ndarray]
+        y: Union[pd.Series, np.ndarray] = None
     ) -> bool:
         if not isinstance(X, (pd.DataFrame, pd.Series, np.ndarray)):
             raise TypeError("X must be np.ndarray or pd.DataFrame/Series")
-        if not isinstance(y, (pd.Series, np.ndarray)):
+        if y is not None and not isinstance(y, (pd.Series, np.ndarray)):
             raise TypeError("y must be np.ndarray or pd.Series")
         
         return True
