@@ -12,6 +12,7 @@ class LogisticRegression(ModelBaseModel):
         eta: float  = 0.05 , 
         check_w_after: float = 20,
         max_count: int = 10000,
+        max_scan_time: int = 100,
         tol: float = 1e-4,
         activate: Literal['auto', 'sigmoid', 'softmax']  = "auto",
         threshold: float  = 0.5
@@ -19,7 +20,7 @@ class LogisticRegression(ModelBaseModel):
         super().__init__()
         self.eta = eta
         self.check_w_after = check_w_after
-        self.max_count = max_count
+        self.max_scan_time = max_scan_time
         self.tol = tol
         self.activate = activate
         if not (0 < threshold < 1):
@@ -34,6 +35,8 @@ class LogisticRegression(ModelBaseModel):
         y_train = self._convert_to_numpy(y)
         
         self.n_classes = self._get_number_of_classes(y_train)
+        
+        self.max_count = X.shape[0] * self.max_scan_time
         
         self.d = X.shape[1]
         self.w_init = np.random.randn(self.d, 1)
