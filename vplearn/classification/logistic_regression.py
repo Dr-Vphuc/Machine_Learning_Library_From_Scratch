@@ -11,7 +11,6 @@ class LogisticRegression(ModelBaseModel):
         self,
         eta: float  = 0.05 , 
         check_w_after: float = 20,
-        max_count: int = 10000,
         max_scan_time: int = 100,
         tol: float = 1e-4,
         activate: Literal['auto', 'sigmoid', 'softmax']  = "auto",
