@@ -2,6 +2,15 @@
 
 First of all, thank you for taking the time to contribute to this project! To ensure an efficient workflow, please follow these steps:
 
+## Reporting Bugs
+If you find a bug, please check if it has already been reported in the **Issues** section. If not, create a new Issue and describe:
+* How does the bug occur?
+* What is the expected result?
+* Screenshots (if available).
+
+## Suggesting New Features
+Have a great idea? Open an Issue and label it as `enhancement`.
+
 ## Workflow
 
 1. **Fork** this repository to your account.
