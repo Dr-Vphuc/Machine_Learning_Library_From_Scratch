@@ -37,8 +37,12 @@ class KNN(InstanceBaseModel):
         return np.array(preds)
 
     def _get_k_closest(self, x: np.ndarray) -> np.ndarray:
-        
-        distances = np.sum((self.X_train - x)**2, axis=1)
+
+        if self.X_train.ndim == 1:
+            distances = (self.X_train - x) ** 2
+        else:
+            distances = np.sum((self.X_train - x) ** 2, axis=1)
+
         idxes = np.argpartition(distances, self.k)[:self.k]
         
         return idxes
