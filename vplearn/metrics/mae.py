@@ -12,7 +12,7 @@ class MAE(_Metric):
         self.mae = self._compute()
 
     def _compute(self) -> float:
-        return np.mean((self.ground_truth - self.predict))
+        return np.mean(abs(self.ground_truth - self.predict))
 
     def __float__(self) -> float:
         return float(self.mae)
