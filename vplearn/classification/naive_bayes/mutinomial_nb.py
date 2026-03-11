@@ -128,14 +128,14 @@ class MutinomialNB(InstanceBaseModel):
             len(X_col) + num_nomials_M * self.laplace_smoothing_alpha
         )
     
-    def _predict_mnb_category_class(self, X: pd.DataFrame) -> np.ndarray:
+    def _predict_mnb_category_class(self, X: np.ndarray) -> np.ndarray:
         """Dự đoán lớp cho dữ liệu dạng category.
         
         y = argmax_k P(k) * prod_i P(xi | k)
         Sử dụng log để tránh underflow.
         
         Args:
-            X: dữ liệu đầu vào (pd.DataFrame), mỗi hàng là một mẫu cần dự đoán
+            X: dữ liệu đầu vào (np.ndarray), mỗi hàng là một mẫu cần dự đoán
             
         Returns:
             Mảng numpy chứa nhãn lớp dự đoán cho từng mẫu
@@ -143,7 +143,7 @@ class MutinomialNB(InstanceBaseModel):
         pred: list = []
         feature_cols: list[str] = list(self.X_by_class[self.classes[0]].columns)
         
-        for _, x_row in X.iterrows():
+        for _, x_row in enumerate(X):
             scores: np.ndarray = np.array(
                 [np.log(float(self.p_c[_class])) for _class in self.classes]
             )
@@ -153,7 +153,7 @@ class MutinomialNB(InstanceBaseModel):
                 for i, col in enumerate(feature_cols):
                     M: int = int(self.num_nomials_per_feature[col])
                     scores[k] += np.log(
-                        self._pxik_feature_per_class(X_k[col], x_row.iloc[i], M)
+                        self._pxik_feature_per_class(X_k[col], x_row[i], M)
                     )
             
             max_score_class_idx: int = int(np.argmax(scores))
