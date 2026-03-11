@@ -4,18 +4,20 @@ import pandas as pd
 import numpy as np
 
 class KNN(InstanceBaseModel):
-    def __init__(self):
-        super().__init__()
-        
-    def fit(self, X: pd.DataFrame, y: pd.Series, k: int) -> None:
-        self._check_fit_input_format(X, y)
+    def __init__(self, k: int):
         
         if not isinstance(k, int):
             raise TypeError("k must be an integer")
         
+        super().__init__()
+        self.k = k
+        
+    def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
+        self._check_fit_input_format(X, y)
+        
         self.X_train = self._convert_to_numpy(X)
         self.y_train = self._convert_to_numpy(y)
-        self.k = k
+        
     
     def predict(self, X: pd.DataFrame):
         self._check_predict_input_format(X)
