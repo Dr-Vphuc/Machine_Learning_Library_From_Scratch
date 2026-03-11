@@ -17,6 +17,9 @@ class MAE(_Metric):
     def __float__(self) -> float:
         return float(self.mae)
 
+    def __format__(self, format_spec: str) -> str:
+        return format(self.mae, format_spec)
+
     def __repr__(self) -> str:
         return f"MAE({self.mae:.6f})"
     

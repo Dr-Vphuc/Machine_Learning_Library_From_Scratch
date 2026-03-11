@@ -30,5 +30,8 @@ class Precision(_Metric):
     def __float__(self) -> float:
         return float(self.precision)
 
+    def __format__(self, format_spec: str) -> str:
+        return format(self.precision, format_spec)
+
     def __repr__(self) -> str:
         return f"Precision({self.precision:.6f})"

@@ -17,5 +17,8 @@ class Accuracy(_Metric):
     def __float__(self) -> float:
         return float(self.accuracy)
 
+    def __format__(self, format_spec: str) -> str:
+        return format(self.accuracy, format_spec)
+
     def __repr__(self) -> str:
         return f"Accuracy({self.accuracy:.6f})"

@@ -17,6 +17,9 @@ class MSE(_Metric):
     def __float__(self) -> float:
         return float(self.mse)
 
+    def __format__(self, format_spec: str) -> str:
+        return format(self.mse, format_spec)
+
     def __repr__(self) -> str:
         return f"MSE({self.mse:.6f})"
     

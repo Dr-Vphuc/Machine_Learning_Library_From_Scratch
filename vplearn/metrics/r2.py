@@ -19,6 +19,9 @@ class R2(_Metric):
     def __float__(self) -> float:
         return float(self.r2)
 
+    def __format__(self, format_spec: str) -> str:
+        return format(self.r2, format_spec)
+
     def __repr__(self) -> str:
         return f"R2({self.r2:.6f})"
     
