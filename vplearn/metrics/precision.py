@@ -9,12 +9,23 @@ class Precision(_Metric):
 
         self.ground_truth = ground_truth
         self.predict = predict
-        self.precision = self._compute()
+        self.classes: np.ndarray = np.unique(ground_truth)
+        self.precision_per_class: dict = {}
+        self.precision: float = self._compute()
 
     def _compute(self) -> float:
-        true_positive = np.sum((self.ground_truth == 1) & (self.predict == 1))
-        false_positive = np.sum((self.ground_truth == 0) & (self.predict == 1))
-        return true_positive / (true_positive + false_positive)
+        precisions: list[float] = []
+
+        for _class in self.classes:
+            true_positive: int = np.sum((self.ground_truth == _class) & (self.predict == _class))
+            false_positive: int = np.sum((self.ground_truth != _class) & (self.predict == _class))
+            denominator: int = true_positive + false_positive
+
+            p: float = true_positive / denominator if denominator > 0 else 0.0
+            self.precision_per_class[_class] = p
+            precisions.append(p)
+
+        return float(np.mean(precisions))
 
     def __float__(self) -> float:
         return float(self.precision)
