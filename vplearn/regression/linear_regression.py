@@ -5,7 +5,7 @@ from typing import Tuple
 import pandas as pd
 import numpy as np
 
-class LinearRegrestion(ModelBaseModel):
+class LinearRegression(ModelBaseModel):
     def __init__(self):
         super().__init__()
     

@@ -1,4 +1,4 @@
 from .knn import KNN
-from .linear_regression import LinearRegrestion
+from .linear_regression import LinearRegression
 
-__all__ = ['KNN', 'LinearRegrestion']
+__all__ = ['KNN', 'LinearRegression']
