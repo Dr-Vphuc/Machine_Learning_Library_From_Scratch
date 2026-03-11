@@ -13,6 +13,12 @@ class Encoding:
             label_mapping[_class] = idx
             
         return y.map(label_mapping)
+    
+    def categorical_encoding(self, X: pd.DataFrame, categorical_features: list[str]) -> pd.DataFrame:
+        for feature in categorical_features:
+            X[feature] = self.label_encoding(X[feature])
+        
+        return X
 
     def _word_with_idx(self, v: set) -> dict:
         result = {}
