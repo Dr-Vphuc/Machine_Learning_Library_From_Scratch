@@ -31,13 +31,15 @@ class LogisticRegression(ModelBaseModel):
         self._check_fit_input_format(X, y)
         
         X_train = self._convert_to_numpy(X)
+        X_train = np.concatenate((np.ones((X_train.shape[0], 1)), X_train), axis = 1)
+        # print(X_train.shape)
         y_train = self._convert_to_numpy(y)
         
         self.n_classes = self._get_number_of_classes(y_train)
         
         self.max_count = X.shape[0] * self.max_scan_time
         
-        self.d = X.shape[1]
+        self.d = X_train.shape[1]
         self.w_init = np.random.randn(self.d, 1)
         
         if self.activate is None or self.activate == 'auto':
@@ -60,6 +62,7 @@ class LogisticRegression(ModelBaseModel):
         self._check_predict_input_format(X)
         
         X = self._correct_predict_input_format(X)
+        X = np.concatenate((np.ones((X.shape[0], 1)), X), axis = 1)
         
         return (
             self._predict_sigmoid_logistic_class(X)
