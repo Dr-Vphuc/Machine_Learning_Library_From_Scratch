@@ -49,7 +49,7 @@ class Encoding:
         
     def one_hot_encoding(self, X: pd.DataFrame, categorical_features: list[str], y: str = 'class') -> pd.DataFrame:
         for feature in categorical_features:
-            one_hot = pd.get_dummies(X[feature], prefix=feature).astype(int)
+            one_hot = pd.get_dummies(X[feature], prefix=feature, drop_first=True).astype(int)
             X = pd.concat([X, one_hot], axis=1)
             X.drop(feature, axis=1, inplace=True)
             
