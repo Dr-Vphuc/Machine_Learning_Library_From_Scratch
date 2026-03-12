@@ -30,10 +30,10 @@ class LogisticRegression(ModelBaseModel):
     def fit(self, X: pd.DataFrame, y: pd.Series) -> None:
         self._check_fit_input_format(X, y)
         
-        X_train = self._convert_to_numpy(X)
+        X_train = self._convert_to_numpy(X).astype(float)
         X_train = np.concatenate((np.ones((X_train.shape[0], 1)), X_train), axis = 1)
         # print(X_train.shape)
-        y_train = self._convert_to_numpy(y)
+        y_train = self._convert_to_numpy(y).astype(float)
         
         self.n_classes = self._get_number_of_classes(y_train)
         
@@ -74,6 +74,7 @@ class LogisticRegression(ModelBaseModel):
         return len(np.unique(y).tolist())
     
     def _sigmoid(self, s):
+        s = np.asarray(s, dtype=np.float64)
         return 1/(1 + np.exp(-s))
 
     def _logistic_sigmoid_regression(self, X, y):
