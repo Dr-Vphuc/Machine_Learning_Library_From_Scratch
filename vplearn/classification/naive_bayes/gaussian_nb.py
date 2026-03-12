@@ -33,7 +33,7 @@ class GaussianNB(InstanceBaseModel):
     -> tuple[np.ndarray,np.ndarray,np.ndarray]:
         
         data_size = y.shape[0]
-        n_class = len(pd.unique(y))
+        n_class = len(pd.unique(y.values.ravel()))
         
         mu_list = []
         std_list = []
