@@ -42,7 +42,7 @@ class LinearRegression(ModelBaseModel):
         R = np.copy(A)
         
         for n in range(N):
-            x = A[n:, n]
+            x = R[n:, n]
             k = x.shape[0]
             ro = -np.sign(x[0]) * np.linalg.norm(x)
             
