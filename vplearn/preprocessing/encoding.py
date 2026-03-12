@@ -46,3 +46,15 @@ class Encoding:
             return np.array(vector_list)
         else:
             raise TypeError('Data does not pharse processed is not support yet.')
+        
+    def one_hot_encoding(self, X: pd.DataFrame, categorical_features: list[str], y: str = 'class') -> pd.DataFrame:
+        for feature in categorical_features:
+            one_hot = pd.get_dummies(X[feature], prefix=feature).astype(int)
+            X = pd.concat([X, one_hot], axis=1)
+            X.drop(feature, axis=1, inplace=True)
+            
+        if y in X.columns:
+            predict_var = X[y]
+            X.drop(y, axis=1, inplace=True)
+            X = pd.concat([X, predict_var], axis=1)
+        return X
