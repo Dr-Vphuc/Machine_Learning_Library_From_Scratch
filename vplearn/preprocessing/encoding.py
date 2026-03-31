@@ -6,13 +6,16 @@ class Encoding:
         pass
     
     def label_encoding(self, y: pd.DataFrame) -> pd.DataFrame:
-        classes = pd.unique(y)
+        classes = pd.unique(y) if isinstance(y, pd.Series) else np.unique(y)
         label_mapping = {}
         
         for idx, _class in enumerate(classes):
             label_mapping[_class] = idx
-            
-        return y.map(label_mapping)
+        
+        if isinstance(y, np.ndarray):
+            return np.array([label_mapping[val] for val in y])
+        else:
+            return y.map(label_mapping)
     
     def categorical_encoding(self, X: pd.DataFrame, categorical_features: list[str]) -> pd.DataFrame:
         for feature in categorical_features:
