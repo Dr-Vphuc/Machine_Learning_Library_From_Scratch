@@ -6,9 +6,9 @@ import pandas as pd
 import numpy as np
 
 class PCA(DimensionalityReduction):
-    def __init__(self):
+    def __init__(self, n_components: int = None):
         super().__init__()
-        self.components_ = None
+        self.components_ = n_components
         self.explained_variance_ = None
         self.explained_variance_ratio_ = None
     
@@ -33,25 +33,24 @@ class PCA(DimensionalityReduction):
 
         var_ratio = eig_vals / np.sum(eig_vals)
         
-        self.explained_variance_ = eig_vals
-        self.explained_variance_ratio_ = var_ratio
+        self.explained_variance_ = eig_vals[:self.components_]
+        self.explained_variance_ratio_ = var_ratio[:self.components_]
         self.X_scaled = X_scaled
         self.eig_vecs = eig_vecs
         
     
-    def transforms(
+    def transform(
         self,
-        k: int
+        X: Union[pd.DataFrame, pd.Series, np.ndarray]
     ) -> np.ndarray:
-        X_pca = self.X_scaled @ self.eig_vecs[:, :k]
+        X_pca = self.X_scaled @ self.eig_vecs[:, :self.components_]
         self.components_ = X_pca
         
         return X_pca
     
     def fit_transform(
         self, 
-        X: Union[pd.DataFrame, pd.Series, np.ndarray],
-        k: int
+        X: Union[pd.DataFrame, pd.Series, np.ndarray]
     ) -> np.ndarray:
         self.fit(X)
-        return self.transforms(k)
+        return self.transforms()
