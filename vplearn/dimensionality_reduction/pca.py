@@ -8,9 +8,12 @@ import numpy as np
 class PCA(DimensionalityReduction):
     def __init__(self, n_components: int = None):
         super().__init__()
-        self.components_ = n_components
+        self.n_components_ = n_components
+        self.components_ = None
         self.explained_variance_ = None
         self.explained_variance_ratio_ = None
+        self.mean_ = None
+        self.std_ = None
     
     def fit(
         self,
@@ -20,7 +23,12 @@ class PCA(DimensionalityReduction):
         
         # X = X.fillna(X.mean())
         X = self._convert_to_numpy(X)
-        X_scaled = (X - X.mean(axis=0)) / X.std(axis=0, ddof=0)
+        
+        # Lưu mean và std để dùng cho transform
+        self.mean_ = X.mean(axis=0)
+        self.std_ = X.std(axis=0, ddof=0)
+        
+        X_scaled = (X - self.mean_) / self.std_
 
         X_corr = (1 / (len(X_scaled))) * X_scaled.T.dot(X_scaled)
 
@@ -33,18 +41,22 @@ class PCA(DimensionalityReduction):
 
         var_ratio = eig_vals / np.sum(eig_vals)
         
-        self.explained_variance_ = eig_vals[:self.components_]
-        self.explained_variance_ratio_ = var_ratio[:self.components_]
-        self.X_scaled = X_scaled
-        self.eig_vecs = eig_vecs
+        self.explained_variance_ = eig_vals[:self.n_components_]
+        self.explained_variance_ratio_ = var_ratio[:self.n_components_]
+        self.components_ = eig_vecs[:, :self.n_components_]
         
     
     def transform(
         self,
         X: Union[pd.DataFrame, pd.Series, np.ndarray]
     ) -> np.ndarray:
-        X_pca = self.X_scaled @ self.eig_vecs[:, :self.components_]
-        self.components_ = X_pca
+        X = self._convert_to_numpy(X)
+        
+        # Scale X sử dụng mean/std từ training data
+        X_scaled = (X - self.mean_) / self.std_
+        
+        # Transform bằng cách nhân với components
+        X_pca = X_scaled @ self.components_
         
         return X_pca
     
@@ -53,4 +65,4 @@ class PCA(DimensionalityReduction):
         X: Union[pd.DataFrame, pd.Series, np.ndarray]
     ) -> np.ndarray:
         self.fit(X)
-        return self.transforms()
+        return self.transform(X)
