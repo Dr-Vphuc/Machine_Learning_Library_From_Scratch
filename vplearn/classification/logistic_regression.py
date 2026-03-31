@@ -161,8 +161,10 @@ class LogisticRegression(ModelBaseModel):
                 count += 1
                 if count % self.check_w_after == 0:
                     if np.linalg.norm(W_new - W[-self.check_w_after]) < self.tol:
+                        self.w = W[-1]
                         return W[-1]
                 W.append(W_new)
+        self.w = W[-1]
         return W[-1]
 
     def _cost(self, X, Y, W):
